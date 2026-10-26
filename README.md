@@ -40,18 +40,24 @@ and its `AGENTS.md` make them one workflow:
 Requirements:
 
 - The OpenSpec CLI (tested with 1.14.3): [installation](https://openspec.dev/docs/installation)
-- The superpowers plugin for your agent (tested with 7.0): [installation](https://github.com/obra/superpowers#installation)
+- The superpowers plugin for your agent (tested with 7.0): [installation](https://github.com/obra/superpowers#installation);
+  restart your agent afterwards so its skills load
+- A git repository with at least one commit: each change gets its own worktree.
+
+Clone this repository outside your project; a clone inside it is a nested git repository.
 
 1. Initialize OpenSpec in your project if you have not already. This generates the `/opsx:*` commands and
    skills for your tool:
    ```
    openspec init
    ```
-2. Copy the schema into the project:
+2. Copy the schema into the project, from this repository:
    ```
+   mkdir -p <your-project>/openspec/schemas
    cp -R openspec/schemas/superpowers <your-project>/openspec/schemas/
    ```
-3. Select it in `<your-project>/openspec/config.yaml`:
+3. Select it in `<your-project>/openspec/config.yaml`, replacing the `schema: spec-driven` that
+   `openspec init` writes:
    ```
    schema: superpowers
    ```
@@ -68,6 +74,14 @@ Requirements:
    openspec schema validate superpowers
    openspec schemas
    ```
+
+Or, with this repository already on disk, run your agent in your project and paste:
+
+```
+Install the OpenSpec schema from <path-to-this-repo> by following the Install section of its README.md.
+Merge into existing config.yaml, AGENTS.md, CLAUDE.md and .gitignore instead of overwriting them. If a
+requirement is missing, tell me and stop; ask before running git init or committing.
+```
 
 ## Usage
 
