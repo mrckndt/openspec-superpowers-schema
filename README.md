@@ -36,7 +36,10 @@ and its `AGENTS.md` make them one workflow:
 
 ## Install
 
-Requirements: the OpenSpec CLI (tested with 1.14.3) and the superpowers plugin (tested with 7.0) for your agent.
+Requirements:
+
+- The OpenSpec CLI (tested with 1.14.3): [installation](https://openspec.dev/docs/installation)
+- The superpowers plugin for your agent (tested with 7.0): [installation](https://github.com/obra/superpowers#installation)
 
 1. Initialize OpenSpec in your project if you have not already. This generates the `/opsx:*` commands and
    skills for your tool:
@@ -67,10 +70,39 @@ Requirements: the OpenSpec CLI (tested with 1.14.3) and the superpowers plugin (
 
 ## Usage
 
+The normal flow is three commands:
+
 ```
+/opsx:explore                 # think it through, read the code; writes nothing
 /opsx:propose <change-name>   # worktree, proposal, specs, design, plan; stops at the approved plan
 /opsx:apply <change-name>     # subagent-driven build, archive, finish
 ```
+
+Run `/opsx:propose` in the same session as the exploration: brainstorming builds on that conversation instead of
+asking again.
+
+Other OpenSpec commands you may run yourself (which ones `openspec init` generates depends on your profile):
+
+| Command | When |
+|---|---|
+| `/opsx:update <change-name>` | Revise a change's planning artifacts after review, keeping them coherent |
+| `/opsx:sync <change-name>` | Merge a change's delta specs into `openspec/specs/` without archiving it |
+| `/opsx:archive <change-name>` | Archive by hand, e.g. after an apply run that stopped before finishing |
+
+superpowers skills that fit outside the automated flow:
+
+| Skill | When |
+|---|---|
+| `superpowers:systematic-debugging` | A bug, failing test, or unexpected behavior, before proposing a fix |
+| `superpowers:test-driven-development` | Small fixes you make without a change folder |
+| `superpowers:verification-before-completion` | Before claiming something works or is done |
+| `superpowers:requesting-code-review` | A review of work done outside `/opsx:apply` |
+| `superpowers:receiving-code-review` | Acting on review feedback from people or tools |
+| `superpowers:finishing-a-development-branch` | Merge, PR, or keep a branch that `/opsx:apply` did not finish |
+| `superpowers:diagnosing-superpowers` | A session went wrong and you want to know why |
+
+Leave `superpowers:brainstorming`, `superpowers:writing-plans` and `superpowers:subagent-driven-development` to the
+schema: invoked directly, they bypass the change folder, its validation, and the apply rules.
 
 ## Known limitations
 

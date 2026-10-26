@@ -3,8 +3,9 @@
 OpenSpec owns the artifacts in `openspec/changes/<name>/`; superpowers owns the process. The schema
 `openspec/schemas/superpowers/` names the superpowers skill for each artifact step.
 
-- **Entry point:** feature work starts with `/opsx:propose <name>`. Invoke superpowers:brainstorming and
-  superpowers:writing-plans only when an `openspec instructions` result says so.
+- **Entry point:** feature work starts with `/opsx:explore`, then `/opsx:propose <name>`. Explore only thinks
+  and reads: when the user wants to capture it as a change, run `/opsx:propose`. Invoke superpowers:brainstorming
+  and superpowers:writing-plans only when an `openspec instructions` result says so.
 - **IMPORTANT - output paths:** design doc: `openspec/changes/<name>/design.md`; plan:
   `openspec/changes/<name>/tasks.md`. Never create files under `docs/superpowers/`.
 - **Worktree:** yes, without asking, via superpowers:using-git-worktrees before `/opsx:propose` (not at
