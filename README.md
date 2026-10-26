@@ -3,19 +3,6 @@
 An [OpenSpec](https://github.com/Fission-AI/OpenSpec) workflow schema that runs each OpenSpec artifact step
 through the matching [superpowers](https://github.com/obra/superpowers) skill.
 
-## Install with your agent
-
-Run your agent in your project root and paste:
-
-```
-Install the OpenSpec schema from https://github.com/mrckndt/openspec-superpowers-schema by following the
-"Manual install" steps in its README.md. Clone it to a temporary directory outside this project. Merge into
-existing config.yaml, AGENTS.md, CLAUDE.md and .gitignore instead of overwriting them. If a requirement is
-missing, tell me and stop; ask before running git init or committing.
-```
-
-To install by hand, see [Install](#install) below.
-
 ## What it is
 
 OpenSpec gives a change a durable home: `proposal.md`, delta specs, `design.md` and `tasks.md` under
@@ -50,7 +37,16 @@ and its `AGENTS.md` make them one workflow:
 
 ## Install
 
-Requirements and the manual steps. To let your agent do it, see [Install with your agent](#install-with-your-agent).
+### With your agent (recommended)
+
+Run your agent in your project root and paste:
+
+```
+Install the OpenSpec schema from https://github.com/mrckndt/openspec-superpowers-schema by following the
+"Manual install" steps in its README.md. Clone it to a temporary directory outside this project. Merge into
+existing config.yaml, AGENTS.md, CLAUDE.md and .gitignore instead of overwriting them. If a requirement is
+missing, tell me and stop; ask before running git init or committing.
+```
 
 ### Requirements
 
