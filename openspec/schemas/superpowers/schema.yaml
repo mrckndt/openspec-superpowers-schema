@@ -45,7 +45,10 @@ artifacts:
       implementation details belong in design.md.
 
       Ask the user only what you need to name the change and its
-      capabilities. Write every other scope or behavior call into
+      capabilities. If the request does not say who or what will use the
+      result, ask that first, as one open question: the answer shapes the
+      capabilities, and learning it only in brainstorming means rewriting
+      proposal.md and specs/. Write every other scope or behavior call into
       proposal.md as an explicit assumption: superpowers:brainstorming
       confirms them with the user in the design step.
 
@@ -236,7 +239,9 @@ apply:
     workflow's pause rules: make rulings where it says to, and stop only
     where it or this instruction says so. On top of that skill:
     - Every implementer dispatch includes the plan's Global Constraints:
-      task-brief extracts only the task's own section.
+      task-brief extracts only the task's own section. Write the section
+      once to `global-constraints.md` in the SDD workspace and point each
+      dispatch at it.
     - When the SDD ledger records `Task N` complete, tick that task's
       `- [ ] Task N:` line in tasks.md (find it via the apply instructions'
       sourcePath and line) and commit the tick.

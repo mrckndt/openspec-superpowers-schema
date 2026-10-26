@@ -40,8 +40,10 @@ and its `AGENTS.md` make them one workflow:
 Requirements:
 
 - The OpenSpec CLI (tested with 1.14.3): [installation](https://openspec.dev/docs/installation)
-- The superpowers plugin for your agent (tested with 7.0): [installation](https://github.com/obra/superpowers#installation);
-  restart your agent afterwards so its skills load
+- The superpowers plugin for your agent (tested with 7.0): [installation](https://github.com/obra/superpowers#installation).
+  Install it for all projects, or for this one from the project root: a project install from a subfolder applies
+  to that subfolder only. Then restart your agent and check that its skills (e.g. `superpowers:brainstorming`)
+  are listed
 - A git repository with at least one commit: each change gets its own worktree.
 
 Clone this repository outside your project; a clone inside it is a nested git repository.
