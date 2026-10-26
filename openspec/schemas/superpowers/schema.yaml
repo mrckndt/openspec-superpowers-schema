@@ -45,9 +45,12 @@ artifacts:
       Keep it concise (1-2 pages). Focus on the "why" not the "how" -
       implementation details belong in design.md.
 
-      Write every scope or behavior call the user has not settled into
-      proposal.md as an explicit assumption: superpowers:brainstorming
-      confirms them with the user in the design step.
+      Keep what the user settled apart from what you assume:
+      - **Decided**: every scope or behavior call the user has already
+        made, for example while exploring, one line each in their terms.
+      - **Assumptions**: every call the user has not settled. Write each
+        as an explicit assumption: superpowers:brainstorming confirms them
+        with the user in the design step.
 
       This is the foundation - specs, design, and tasks all build on this.
     requires: []
@@ -185,10 +188,14 @@ artifacts:
       first, confirms their assumptions with the user, and designs the how.
       If it changes scope or behavior, update proposal.md and specs/ first.
 
+      Brainstorming's first message starts with proposal.md's Decided list,
+      played back in a few lines, so the user can correct it before any
+      question; its question then follows the steps below.
+
       Brainstorming first judges whether anything that matters is still open:
-      1. If everything that matters is settled in proposal.md and specs/ (no
-         open assumptions), or the user takes brainstorming's offer to just
-         get going, ask exactly: "Skip the design?"
+      1. If everything that matters is settled in proposal.md and specs/ (an
+         empty Assumptions section), or the user takes brainstorming's offer
+         to just get going, ask exactly: "Skip the design?"
       2. Only an explicit yes to that question skips the design; a short or
          ambiguous answer to another question is not a yes. Write design.md
          with `Skipped: <reason>` as its first line, then one line per

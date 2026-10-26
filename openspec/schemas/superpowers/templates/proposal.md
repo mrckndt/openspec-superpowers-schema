@@ -8,6 +8,14 @@
 
 <!-- Describe what will change. Be specific about new capabilities, modifications, or removals. -->
 
+## Decided
+
+<!-- Scope and behavior calls the user already made (for example while exploring), one line each, in their terms. -->
+
+## Assumptions
+
+<!-- Calls the user has not settled yet. Brainstorming confirms each with the user in the design step. -->
+
 ## Capabilities
 
 ### New Capabilities

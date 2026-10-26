@@ -14,8 +14,9 @@ OpenSpec owns the artifacts in `openspec/changes/<change-name>/`; superpowers ow
 - **IMPORTANT - output paths:** design doc: `openspec/changes/<change-name>/design.md`; plan:
   `openspec/changes/<change-name>/tasks.md`. Never create files under `docs/superpowers/`.
 - **Worktree:** create it via superpowers:using-git-worktrees, without asking, in these steps:
-  1. Record the output of `git branch --show-current` as the base branch. If `git check-ignore -q .worktrees`
-     fails, ask the user before the skill commits a `.gitignore` change to the base branch.
+  1. Record the output of `git branch --show-current` as the base branch. If `git check-ignore -q .worktrees/`
+     fails (keep the trailing slash: before the first worktree the directory does not exist, and without the
+     slash git does not match the `.worktrees/` rule), ask the user before the skill commits a `.gitignore` change to the base branch.
   2. Use the skill's git fallback (Step 1b) with `.worktrees/` as its directory, also when a native worktree tool
      exists: `git worktree add .worktrees/<change-name> -b <change-name>`.
   3. Switch into the worktree and confirm `git branch --show-current` prints `<change-name>`.
