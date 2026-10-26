@@ -272,29 +272,40 @@ apply:
     skills, tell the user the superpowers plugin is missing and stop before
     any code changes. Never execute the plan inline in its place.
 
-    Replace step 6 of the apply workflow (its task loop and per-checkbox
-    ticking): invoke the superpowers:subagent-driven-development skill with
-    tasks.md as the plan. That skill's stop rules replace the apply
+    Before any code change, confirm `git branch --show-current` prints the
+    change name; otherwise switch into the change's worktree first.
+
+    Replace step 6 of the apply workflow ("Implement tasks": its task loop
+    and per-checkbox ticking): invoke the superpowers:subagent-driven-development
+    skill with tasks.md as the plan. That skill's stop rules replace the apply
     workflow's pause rules: make rulings where it says to, and stop only
     where it or this instruction says so. On top of that skill:
-    - Every implementer dispatch includes the plan's plan-wide rules (its
-      Global Constraints section): the per-task extract the skill hands an
-      implementer holds only that task's section. Write the plan-wide rules
-      once to `global-constraints.md` beside the skill's other files for
-      this plan and point each dispatch at it.
-    - When the skill records `Task N` as complete, tick that task's
-      `- [ ] Task N:` line in tasks.md (find it via the apply instructions'
-      sourcePath and line) and commit the tick.
-    - After the final whole-branch review, before archive, stop and report
-      to the user if any of these holds; they decide how to continue:
-      - The review left a Critical or Important finding open (ruled on, not
-        fixed). Show those findings with every ruling the skill made during
-        the run; never carry them into a merge.
-      - `openspec instructions apply --change "<name>" --json` does not
-        report `state: all_done` (archive's `-y` skips its own
-        incomplete-task check). List the open tasks.
-      - The project's full test suite fails.
-    - Otherwise: finish the skill's own close-out (report its rulings, clean
-      up its files for this plan), then run `openspec archive "<name>" -y`
-      (it merges the delta specs into openspec/specs/ itself), commit, and
-      invoke superpowers:finishing-a-development-branch.
+    - Every implementer dispatch includes the plan's Global Constraints
+      section: the task brief the skill extracts holds only that task's
+      section. Write the section once to `global-constraints.md` in the
+      skill's workspace directory for this plan (where its task briefs go)
+      and point each dispatch at it.
+    - When the skill records `Task N` as complete, change that task's
+      `- [ ] Task N:` line in tasks.md to `- [x] Task N:` and commit tasks.md.
+    - For the final whole-branch review, set MERGE_BASE to
+      `git merge-base <base branch> HEAD`, with `<base branch>` from the
+      plan header's `**Base branch:**` line.
+    - After the final whole-branch review, when the skill's next steps are to
+      delete its workspace and invoke superpowers:finishing-a-development-branch,
+      pause there. Before deleting anything, check:
+      - Every Critical or Important final-review finding that was not fixed,
+        including findings parked with a ruling.
+      - The state `openspec instructions apply --change "<change-name>" --json`
+        reports. Archive's `-y` skips its own incomplete-task check, so only
+        `all_done` passes.
+      - The project's full test suite.
+      If any finding is unfixed, the state is not `all_done`, or the suite
+      fails: stop and report to the user, showing the unfixed findings with
+      every ruling the skill made during the run, the open tasks, and the
+      failing tests. The user decides how to continue; unfixed findings never
+      go into a merge.
+    - Otherwise, in this order: finish the skill's own close-out (report its
+      rulings, delete its workspace for this plan); run
+      `openspec archive "<change-name>" -y` (it merges the delta specs into
+      openspec/specs/ itself); commit; invoke
+      superpowers:finishing-a-development-branch.
