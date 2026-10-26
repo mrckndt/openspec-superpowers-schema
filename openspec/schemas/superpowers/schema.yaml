@@ -180,27 +180,35 @@ artifacts:
       skills, tell the user the superpowers plugin is missing and stop.
       Never write the design yourself in its place.
 
-      Always write design.md; brainstorming decides whether it holds a
-      design. Invoke the superpowers:brainstorming skill; it first judges
-      whether anything that matters is still open:
-      - Everything that matters is already settled in proposal.md and specs/
-        (no open assumptions), or the user takes brainstorming's offer to
-        just get going: skip the design, but only after asking "Skip the
-        design?" as a yes/no question and getting an explicit yes; a short
-        or ambiguous answer to another question is not a yes. Then write
-        design.md as one line, `Skipped: <reason>`, followed by any
-        how-it-gets-made choice (language, libraries).
-      - Otherwise: run brainstorming to approval and save its design doc to
-        openspec/changes/<name>/design.md, not docs/superpowers/specs/.
-        Use the template's headings.
-      Do not commit design.md yet.
-
+      Always write design.md. Invoke the superpowers:brainstorming skill.
       proposal.md and specs/ are drafts of the what: brainstorming reads them
       first, confirms their assumptions with the user, and designs the how.
       If it changes scope or behavior, update proposal.md and specs/ first.
 
-      After design.md is approved or skipped, run `openspec instructions
-      tasks` next; do not invoke writing-plans before that.
+      Brainstorming first judges whether anything that matters is still open:
+      1. If everything that matters is settled in proposal.md and specs/ (no
+         open assumptions), or the user takes brainstorming's offer to just
+         get going, ask exactly: "Skip the design?"
+      2. Only an explicit yes to that question skips the design; a short or
+         ambiguous answer to another question is not a yes. Write design.md
+         with `Skipped: <reason>` as its first line, then one line per
+         how-it-gets-made choice (language, libraries).
+      3. Any other answer, or anything still open: run brainstorming to
+         approval and save its design doc to
+         openspec/changes/<change-name>/design.md, not docs/superpowers/specs/.
+         Use the template's headings.
+
+      This step plans only: offer no spikes, since they write project code.
+      If brainstorming finds several independent projects, ask the user which
+      one this change covers and note the others under What Changes in
+      proposal.md as out of scope.
+
+      Leave design.md uncommitted: the tasks step commits the change folder
+      after plan approval.
+
+      After design.md is approved or skipped, run
+      `openspec instructions tasks --change "<change-name>" --json` next, and
+      invoke writing-plans as its instruction says.
     requires:
       - proposal
       - specs
@@ -215,25 +223,38 @@ artifacts:
       Never write the plan yourself in its place.
 
       Invoke the superpowers:writing-plans skill and save its plan to
-      openspec/changes/<name>/tasks.md, not docs/superpowers/plans/.
+      openspec/changes/<change-name>/tasks.md, not docs/superpowers/plans/.
       On top of its format:
-      - Resolve design.md open questions that would change what gets built
-        with the user first. If design.md says `Skipped:`, plan from
-        proposal.md and specs/.
-      - Header: replace its line naming the skill to execute the plan with
-        `> **For agentic workers:** Execute with /opsx:apply, which runs superpowers:subagent-driven-development task-by-task. Each task has one checkbox (`- [ ]`) for tracking.`
-        Under it, add `**Base branch:** <branch the worktree was created from>`:
-        the final review's merge-base and finishing's merge target use it.
+      - Task format: OpenSpec counts every `- [ ]` line, even inside code
+        blocks, while apply works in whole tasks. Put exactly one checkbox
+        directly under each task heading, and write steps as bold lines
+        without checkboxes:
+        ```
+        ### Task 1: <task name>
+        - [ ] Task 1: <task name>
+        **Step 1: Write the failing test**
+        ```
+      - Header: replace the line starting `> **For agentic workers:**` with
+        this line:
+        ```
+        > **For agentic workers:** Execute with /opsx:apply, which runs superpowers:subagent-driven-development task-by-task. Each task has one checkbox (`- [ ]`) for tracking.
+        ```
+        Under it, add `**Base branch:** <base branch>`, using the base branch
+        recorded before the worktree was created (ask the user if it is not
+        known): the final review's merge-base and finishing's merge target
+        use it.
+      - Set the header's `**Spec:**` field to
+        `openspec/changes/<change-name>/`, and name every `#### Scenario:`
+        from specs/ in at least one test step.
+      - Refer to untracked or git-ignored files (not in the worktree) by
+        their absolute path in the main checkout, the first path
+        `git worktree list` prints.
+      - Before planning, resolve with the user every choice in design.md that
+        is still open and would change what gets built. If design.md starts
+        with `Skipped:`, plan from proposal.md and specs/.
       - If self-review finds an error in proposal.md, specs/ or design.md,
         fix it there and list each behavior or scope edit when asking for
         plan approval. Typo and format fixes need no mention.
-      - **Spec:** is this change directory; name every `#### Scenario:` from
-        specs/ in at least one test step.
-      - Track per task, not per step: OpenSpec counts every `- [ ]` line,
-        even inside code blocks, while apply works in whole tasks. Put
-        exactly one `- [ ] Task N: <name>` line directly under each
-        `### Task N: <name>` heading, and write the steps as
-        `**Step N: ...**` lines without checkboxes.
 
       When the user approves the plan: commit the change folder, tell them
       to run /opsx:apply, and stop. Skip the execution-method question and
