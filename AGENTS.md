@@ -23,4 +23,7 @@ OpenSpec owns the artifacts in `openspec/changes/<name>/`; superpowers owns the 
 - **Apply in the worktree:** the change folder exists only on the change's branch, so run `/opsx:apply` from its
   worktree; in a new session, switch into it first (Claude Code: `EnterWorktree` with its `path`). To remove the
   worktree when finishing, leave it first (Claude Code: `ExitWorktree` with `keep`), then `git worktree remove` it.
+- **If the user chooses a local merge when finishing:** first check the main checkout for uncommitted changes. If
+  any touch files the branch changed, the merge would fail: show them to the user and ask how to handle them;
+  never set them aside on your own.
 - **Apply to finish:** the schema's `apply` instruction covers task ticking, archive, and finishing.

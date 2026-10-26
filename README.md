@@ -16,19 +16,19 @@ and its `AGENTS.md` make them one workflow:
 
 | Step | OpenSpec artifact | Done by |
 |---|---|---|
-| Why and what | `proposal.md` | OpenSpec instruction |
-| Behavior contract | `specs/**/spec.md` | OpenSpec instruction |
-| How | `design.md` (a `Skipped:` line when nothing is open) | superpowers:brainstorming |
-| Plan | `tasks.md` (one checkbox per task) | superpowers:writing-plans |
-| Build | `/opsx:apply` | superpowers:subagent-driven-development |
-| Finish | `openspec archive`, merge or PR | superpowers:finishing-a-development-branch |
+| Why and what | `proposal.md` | `/opsx:propose` (or `/opsx:explore` when you ask it to capture the change) |
+| Behavior contract | `specs/**/spec.md` | `/opsx:propose` (or `/opsx:explore` when you ask it to capture the change) |
+| How | `design.md` (a `Skipped:` line when nothing is open) | `/opsx:propose` → superpowers:brainstorming |
+| Plan | `tasks.md` (one checkbox per task) | `/opsx:propose` → superpowers:writing-plans |
+| Build | code; checkboxes in `tasks.md` | `/opsx:apply` → superpowers:subagent-driven-development |
+| Finish | `openspec archive` (moves the change to the archive, merges its specs), then merge or PR | `/opsx:apply` → OpenSpec CLI, then superpowers:finishing-a-development-branch |
 
 ## Why
 
 - Specs stay the source of truth: every scenario is named in at least one test step of the plan, and archive
   merges the deltas into `openspec/specs/`.
 - Design happens when it is needed: brainstorming decides whether the request leaves anything open, and skips
-  the design when it does not or when you ask it to just get going.
+  the design only when you answer an explicit "Skip the design?" with yes.
 - Planning and building are separate: `/opsx:propose` stops at an approved, committed plan; nothing is built
   until you run `/opsx:apply`.
 - Execution is reviewed: each task goes to a fresh implementer subagent and a reviewer, then a final

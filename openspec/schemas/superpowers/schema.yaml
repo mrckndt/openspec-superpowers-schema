@@ -178,9 +178,11 @@ artifacts:
       Do You Actually Know?" step decides:
       - Everything that matters is already settled in proposal.md and specs/
         (no open assumptions), or the user takes brainstorming's offer to
-        just get going: skip the design. Write design.md as one line,
-        `Skipped: <reason>`, followed by any how-it-gets-made choice
-        (language, libraries), and tell the user in one line.
+        just get going: skip the design, but only after asking "Skip the
+        design?" as a yes/no question and getting an explicit yes; a short
+        or ambiguous answer to another question is not a yes. Then write
+        design.md as one line, `Skipped: <reason>`, followed by any
+        how-it-gets-made choice (language, libraries).
       - Otherwise: run brainstorming to approval and save its design doc to
         openspec/changes/<name>/design.md, not docs/superpowers/specs/.
         Use the template's headings.
