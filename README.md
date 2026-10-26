@@ -64,7 +64,8 @@ Clone this repository outside your project; a clone inside it is a nested git re
    schema: superpowers
    ```
    If the file does not exist, create it with just that line; every other key in it is optional.
-4. Add the rules from `AGENTS.md` to your project's `AGENTS.md`. For Claude Code, copy `CLAUDE.md` too, or
+4. Add the rules from `AGENTS.md` to your project's `AGENTS.md`. Its `Claude Code: worktree tools` section is
+   only for Claude Code; leave it out for other agents. For Claude Code, copy `CLAUDE.md` too, or
    add its one line, `@AGENTS.md`, to your existing `CLAUDE.md`: Claude Code reads `AGENTS.md` on its own only
    when no `CLAUDE.md` exists in the project or above it.
 5. Git-ignore the directory your worktrees live in, for example:
