@@ -3,6 +3,63 @@
 An [OpenSpec](https://github.com/Fission-AI/OpenSpec) workflow schema that runs each OpenSpec artifact step
 through the matching [superpowers](https://github.com/obra/superpowers) skill.
 
+## Install
+
+### With your agent (recommended)
+
+Run your agent in your project root and paste:
+
+```
+Install the OpenSpec schema from https://github.com/mrckndt/openspec-superpowers-schema by following the
+"Manual install" steps in its README.md. Clone it to a temporary directory outside this project. Merge into
+existing config.yaml, AGENTS.md, CLAUDE.md and .gitignore instead of overwriting them. If a requirement is
+missing, tell me and stop; ask before running git init or committing.
+```
+
+### Requirements
+
+- **OpenSpec CLI** (tested with 1.15.0): [installation](https://openspec.dev/docs/installation)
+- **superpowers plugin** for your agent (tested with 7.0): [installation](https://github.com/obra/superpowers#installation).
+  Install it for all projects, or for this one from the project root: a project install from a subfolder applies
+  to that subfolder only. Restart your agent and check that its skills (e.g. `superpowers:brainstorming`) are listed.
+- **Git repository** with at least one commit: each change gets its own worktree.
+
+### Manual install
+
+Run these from your project root.
+
+1. Clone this repository outside your project (a clone inside it is a nested git repository):
+   ```
+   git clone https://github.com/mrckndt/openspec-superpowers-schema.git <clone-dir>
+   ```
+2. Initialize OpenSpec if you have not already. This generates the `/opsx:*` commands and skills for your tool:
+   ```
+   openspec init
+   ```
+3. Copy the schema into the project:
+   ```
+   mkdir -p openspec/schemas
+   cp -R <clone-dir>/openspec/schemas/superpowers openspec/schemas/
+   ```
+4. Select it in `openspec/config.yaml`, replacing the `schema: spec-driven` that `openspec init` writes (create the
+   file with just this line if it does not exist; every other key is optional):
+   ```
+   schema: superpowers
+   ```
+5. Add the rules from `<clone-dir>/AGENTS.md` to your project's `AGENTS.md`. Leave out its
+   `Claude Code: worktree tools` section for other agents. For Claude Code, also add `@AGENTS.md` to your
+   `CLAUDE.md` (or copy the clone's): Claude Code reads `AGENTS.md` on its own only when no `CLAUDE.md` exists
+   in the project or above it.
+6. Git-ignore the worktree directory (each change's worktree lives there):
+   ```
+   .worktrees/
+   ```
+7. Check that OpenSpec picks it up:
+   ```
+   openspec schema validate superpowers
+   openspec schemas
+   ```
+
 ## What it is
 
 OpenSpec gives a change a durable home: `proposal.md`, delta specs, `design.md` and `tasks.md` under
@@ -34,57 +91,6 @@ and its `AGENTS.md` make them one workflow:
 - Execution is reviewed: each task goes to a fresh implementer subagent and a reviewer, then a final
   whole-branch review, never inline. Open review findings, unfinished tasks, or a failing test suite stop the
   run before archive and merge.
-
-## Install
-
-Requirements:
-
-- The OpenSpec CLI (tested with 1.15.0): [installation](https://openspec.dev/docs/installation)
-- The superpowers plugin for your agent (tested with 7.0): [installation](https://github.com/obra/superpowers#installation).
-  Install it for all projects, or for this one from the project root: a project install from a subfolder applies
-  to that subfolder only. Then restart your agent and check that its skills (e.g. `superpowers:brainstorming`)
-  are listed
-- A git repository with at least one commit: each change gets its own worktree.
-
-Clone this repository outside your project; a clone inside it is a nested git repository.
-
-1. Initialize OpenSpec in your project if you have not already. This generates the `/opsx:*` commands and
-   skills for your tool:
-   ```
-   openspec init
-   ```
-2. Copy the schema into the project, from this repository:
-   ```
-   mkdir -p <your-project>/openspec/schemas
-   cp -R openspec/schemas/superpowers <your-project>/openspec/schemas/
-   ```
-3. Select it in `<your-project>/openspec/config.yaml`, replacing the `schema: spec-driven` that
-   `openspec init` writes:
-   ```
-   schema: superpowers
-   ```
-   If the file does not exist, create it with just that line; every other key in it is optional.
-4. Add the rules from `AGENTS.md` to your project's `AGENTS.md`. Its `Claude Code: worktree tools` section is
-   only for Claude Code; leave it out for other agents. For Claude Code, copy `CLAUDE.md` too, or
-   add its one line, `@AGENTS.md`, to your existing `CLAUDE.md`: Claude Code reads `AGENTS.md` on its own only
-   when no `CLAUDE.md` exists in the project or above it.
-5. Git-ignore the worktree directory (`AGENTS.md` creates each change's worktree there):
-   ```
-   .worktrees/
-   ```
-6. Check that OpenSpec picks it up:
-   ```
-   openspec schema validate superpowers
-   openspec schemas
-   ```
-
-Or, with this repository already on disk, run your agent in your project and paste:
-
-```
-Install the OpenSpec schema from <path-to-this-repo> by following the Install section of its README.md.
-Merge into existing config.yaml, AGENTS.md, CLAUDE.md and .gitignore instead of overwriting them. If a
-requirement is missing, tell me and stop; ask before running git init or committing.
-```
 
 ## Usage
 
