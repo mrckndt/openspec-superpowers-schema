@@ -18,7 +18,7 @@ and its `AGENTS.md` make them one workflow:
 |---|---|---|
 | Why and what | `proposal.md` | OpenSpec instruction |
 | Behavior contract | `specs/**/spec.md` | OpenSpec instruction |
-| How | `design.md` (skipped when nothing is open) | superpowers:brainstorming |
+| How | `design.md` (a `Skipped:` line when nothing is open) | superpowers:brainstorming |
 | Plan | `tasks.md` (one checkbox per task) | superpowers:writing-plans |
 | Build | `/opsx:apply` | superpowers:subagent-driven-development |
 | Finish | `openspec archive`, merge or PR | superpowers:finishing-a-development-branch |
@@ -28,11 +28,12 @@ and its `AGENTS.md` make them one workflow:
 - Specs stay the source of truth: every scenario is named in at least one test step of the plan, and archive
   merges the deltas into `openspec/specs/`.
 - Design happens when it is needed: brainstorming decides whether the request leaves anything open, and skips
-  `design.md` when it does not or when you ask it to just get going.
+  the design when it does not or when you ask it to just get going.
 - Planning and building are separate: `/opsx:propose` stops at an approved, committed plan; nothing is built
   until you run `/opsx:apply`.
 - Execution is reviewed: each task goes to a fresh implementer subagent and a reviewer, then a final
-  whole-branch review, never inline.
+  whole-branch review, never inline. Open review findings, unfinished tasks, or a failing test suite stop the
+  run before archive and merge.
 
 ## Install
 
@@ -106,8 +107,6 @@ schema: invoked directly, they bypass the change folder, its validation, and the
 
 ## Known limitations
 
-- When `design.md` is skipped, `openspec status` still lists `design` as open and suggests it as the next
-  step. The workflow continues regardless: `tasks` and `apply` do not wait for it.
 - The superpowers skills keep their own defaults (`docs/superpowers/` paths, an execution-method question,
   a plan header naming executing-plans). The schema instructions and `AGENTS.md` override them; drop either
   and the defaults come back.

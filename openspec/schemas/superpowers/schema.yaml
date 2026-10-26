@@ -170,16 +170,18 @@ artifacts:
     description: Technical design document with implementation details
     template: design.md
     instruction: |
-      Conditional artifact: create only if brainstorming finds it necessary.
-      Always invoke the superpowers:brainstorming skill; its "First: What Do
-      You Actually Know?" step decides:
+      Always write design.md; brainstorming decides whether it holds a
+      design. Invoke the superpowers:brainstorming skill; its "First: What
+      Do You Actually Know?" step decides:
       - Everything that matters is already settled in proposal.md and specs/
         (no open assumptions), or the user takes brainstorming's offer to
-        just get going: skip design.md. Tell the user in one line and state
-        any how-it-gets-made choice (language, libraries) there.
+        just get going: skip the design. Write design.md as one line,
+        `Skipped: <reason>`, followed by any how-it-gets-made choice
+        (language, libraries), and tell the user in one line.
       - Otherwise: run brainstorming to approval and save its design doc to
         openspec/changes/<name>/design.md, not docs/superpowers/specs/.
-        Use the template's headings. Do not commit it yet.
+        Use the template's headings.
+      Do not commit design.md yet.
 
       proposal.md and specs/ are drafts of the what: brainstorming reads them
       first, confirms their assumptions with the user, and designs the how.
@@ -200,10 +202,15 @@ artifacts:
       openspec/changes/<name>/tasks.md, not docs/superpowers/plans/.
       On top of its format:
       - Resolve design.md open questions that would change what gets built
-        with the user first. If design.md was skipped, plan from proposal.md
-        and specs/.
+        with the user first. If design.md says `Skipped:`, plan from
+        proposal.md and specs/.
       - Header: replace the "For agentic workers" line with
         `> **For agentic workers:** Execute with /opsx:apply, which runs superpowers:subagent-driven-development task-by-task. Each task has one checkbox (`- [ ]`) for tracking.`
+        Under it, add `**Base branch:** <branch the worktree was created from>`:
+        the final review's merge-base and finishing's merge target use it.
+      - If self-review finds an error in proposal.md, specs/ or design.md,
+        fix it there and list each behavior or scope edit when asking for
+        plan approval. Typo and format fixes need no mention.
       - **Spec:** is this change directory; name every `#### Scenario:` from
         specs/ in at least one test step.
       - Track per task, not per step: OpenSpec counts every `- [ ]` line,
@@ -231,8 +238,16 @@ apply:
     - When the SDD ledger records `Task N` complete, tick that task's
       `- [ ] Task N:` line in tasks.md (find it via the apply instructions'
       sourcePath and line) and commit the tick.
-    - After the final whole-branch review: collect the Rulings and delete
-      the SDD workspace as that skill says, then run
-      `openspec archive "<name>" -y` (it merges the delta specs into
-      openspec/specs/ itself), commit, and invoke
+    - After the final whole-branch review, before archive, stop and report
+      to the user if any of these holds; they decide how to continue:
+      - Its re-review left a Critical or Important finding open (parked, not
+        fixed). Show those findings with the "Rulings I made" list; never
+        park them into a merge.
+      - `openspec instructions apply --change "<name>" --json` does not
+        report `state: all_done` (archive's `-y` skips its own
+        incomplete-task check). List the open tasks.
+      - The project's full test suite fails.
+    - Otherwise: collect the Rulings and delete the SDD workspace as that
+      skill says, then run `openspec archive "<name>" -y` (it merges the
+      delta specs into openspec/specs/ itself), commit, and invoke
       superpowers:finishing-a-development-branch.
