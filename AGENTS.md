@@ -11,7 +11,8 @@ OpenSpec owns the artifacts in `openspec/changes/<name>/`; superpowers owns the 
 - **Worktree:** yes, without asking, via superpowers:using-git-worktrees before `/opsx:propose` (not at
   execution time). Pick the change name first and use it for the branch. Base the worktree on the current
   local branch, not `origin`: if your native worktree tool branches from `origin`, run
-  `git worktree add <worktree-dir>/<name> -b <name>` instead and work in that directory.
+  `git worktree add <worktree-dir>/<name> -b <name>` instead and work in that directory. Whatever directory it is
+  in, superpowers:finishing-a-development-branch owns its cleanup, as for one under `worktrees/`.
 - **Design:** brainstorming may skip it; `design.md` then holds one `Skipped: <reason>` line.
 - **Missing skill:** if a superpowers skill that an `openspec instructions` result names is unavailable, say so
   and stop; never substitute your own version of it.

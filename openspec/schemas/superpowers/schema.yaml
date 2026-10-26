@@ -232,7 +232,9 @@ apply:
   instruction: |
     Replace step 6 of the apply workflow (its task loop and per-checkbox
     ticking): invoke the superpowers:subagent-driven-development skill with
-    tasks.md as the plan. On top of that skill:
+    tasks.md as the plan. That skill's stop rules replace the apply
+    workflow's pause rules: make rulings where it says to, and stop only
+    where it or this instruction says so. On top of that skill:
     - Every implementer dispatch includes the plan's Global Constraints:
       task-brief extracts only the task's own section.
     - When the SDD ledger records `Task N` complete, tick that task's
