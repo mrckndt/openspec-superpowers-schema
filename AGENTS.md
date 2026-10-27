@@ -15,11 +15,12 @@ OpenSpec owns the artifacts in `openspec/changes/<change-name>/`; superpowers ow
   `openspec/changes/<change-name>/tasks.md`. Never create files under `docs/superpowers/`.
 - **Worktree:** create it via superpowers:using-git-worktrees, without asking, in these steps:
   1. Record the output of `git branch --show-current` as the base branch. If `git check-ignore -q .worktrees/`
-     fails (keep the trailing slash: before the first worktree the directory does not exist, and without the
-     slash git does not match the `.worktrees/` rule), ask the user before the skill commits a `.gitignore` change to the base branch.
-     If it succeeds, skip the skill's own ignore check and `.gitignore` commit: that check omits the slash.
+     (keep the trailing slash) fails, ask the user before the skill commits a `.gitignore` change to the base
+     branch. If it succeeds, skip the skill's own ignore check and `.gitignore` commit: that check omits the
+     trailing slash, which git needs to match the `.worktrees/` rule while the directory does not exist yet.
   2. Use the skill's git fallback (Step 1b) with `.worktrees/` as its directory, also when a native worktree tool
-     exists: `git worktree add .worktrees/<change-name> -b <change-name>`.
+     exists. Run only `git worktree add .worktrees/<change-name> -b <change-name>`, as its own command; leave out
+     the skill's `cd`, step 3 switches.
   3. Switch into the worktree and confirm `git branch --show-current` prints `<change-name>`. If your shell does
      not keep `cd` between commands, run every command as `cd <worktree> && ...`, or ask the user to restart the
      agent inside the worktree.
@@ -48,9 +49,11 @@ OpenSpec owns the artifacts in `openspec/changes/<change-name>/`; superpowers ow
 
 ## Claude Code
 
-- **Switch into a worktree:** `EnterWorktree` with its `path`.
-- **Before finishing's Step 6:** after the merged result passes its tests, if this session called `EnterWorktree`,
-  call `ExitWorktree` with `keep`. Call it no earlier: Step 2 must run inside the worktree.
+- **Switch into a worktree:** only with `EnterWorktree` and its `path`, never with `cd`: a `cd` in a Bash call
+  persists, and `EnterWorktree` then refuses the path as the current working directory. If it does, say so and
+  continue in the worktree; the session then has no `EnterWorktree` to exit.
+- **Before finishing's Step 6:** after the merged result passes its tests, if `EnterWorktree` switched this session
+  into the worktree, call `ExitWorktree` with `keep`. Call it no earlier: Step 2 must run inside the worktree.
 - **New session on a change:** start Claude Code in the main checkout and switch with `EnterWorktree`. A session
   started inside `.worktrees/<change-name>` loses its working directory when finishing removes the worktree.
 - **Subagent models:** never above Opus (such as Fable). Read each superpowers model choice that goes higher
