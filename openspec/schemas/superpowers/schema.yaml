@@ -186,7 +186,16 @@ artifacts:
       Always write design.md. Invoke the superpowers:brainstorming skill.
       proposal.md and specs/ are drafts of the what: brainstorming reads them
       first, confirms their assumptions with the user, and designs the how.
-      If it changes scope or behavior, update proposal.md and specs/ first.
+
+      If brainstorming settles an assumption or changes scope or behavior,
+      do these steps before writing design.md:
+      1. Update proposal.md: move each confirmed assumption to Decided, and
+         revise What Changes and Capabilities.
+      2. Update the affected specs/ files; add or remove a spec file when a
+         capability is added or dropped.
+      3. Run `openspec validate "<change-name>"` and fix what it reports.
+      4. List each behavior or scope edit to the user before asking for
+         design approval, or before writing a `Skipped:` design.md.
 
       Brainstorming's first message starts with proposal.md's Decided list,
       played back in a few lines, so the user can correct it before any
