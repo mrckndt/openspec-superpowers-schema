@@ -1,7 +1,7 @@
 # openspec-superpowers-schema
 
-An [OpenSpec](https://github.com/Fission-AI/OpenSpec) workflow schema that runs each OpenSpec artifact step
-through the matching [superpowers](https://github.com/obra/superpowers) skill.
+An [OpenSpec](https://github.com/Fission-AI/OpenSpec) workflow schema that runs OpenSpec's design, plan and build
+steps through the matching [superpowers](https://github.com/obra/superpowers) skills.
 
 ## What it is and why
 
@@ -11,25 +11,9 @@ through the matching [superpowers](https://github.com/obra/superpowers) skill.
   per task.
 
 Alone they clash: superpowers writes to `docs/superpowers/`, OpenSpec to the change folder, and each has its own
-apply loop. This schema and its `AGENTS.md` make them one workflow:
+apply loop. This schema and its `AGENTS.md` make them one workflow.
 
-```
-explore -> proposal -> specs -> design -> plan/tasks -> steps
-```
-
-| Step | Artifact | Done by |
-|---|---|---|
-| Why and what | `proposal.md` | `/opsx:propose` |
-| Behavior contract | `specs/**/spec.md` | `/opsx:propose` |
-| How | `design.md`, or a `Skipped:` line | `/opsx:propose` → superpowers:brainstorming |
-| Plan | `tasks.md`, one checkbox per task | `/opsx:propose` → superpowers:writing-plans |
-| Build | code, ticked `tasks.md` | `/opsx:apply` → superpowers:subagent-driven-development |
-| Finish | archived change, specs merged; then merge or PR | `/opsx:apply` → `openspec archive`, superpowers:finishing-a-development-branch |
-
-**Note:** `/opsx:explore` is chat only and writes nothing. Ask it to capture the change and it runs
-`/opsx:propose` for you.
-
-What you get:
+**What you get:**
 
 - **Specs stay the source of truth:** every scenario appears in a test step; archive merges the deltas into
   `openspec/specs/`.
@@ -38,6 +22,29 @@ What you get:
 - **Plan before build:** `/opsx:propose` stops at an approved, committed plan; only `/opsx:apply` builds.
 - **Reviewed execution:** a fresh implementer and reviewer per task, then a whole-branch review. Unfixed
   findings, open tasks or failing tests stop the run before archive and merge.
+
+**The workflow:**
+
+```
+explore → proposal → specs → design → plan/tasks → steps → finish
+```
+
+| Step | Artifact | Done by |
+|---|---|---|
+| Explore | none, chat only | `/opsx:explore` |
+| Proposal (why and what) | `proposal.md` | `/opsx:propose` |
+| Specs (behavior contract) | `specs/**/spec.md` | `/opsx:propose` |
+| Design (how) | `design.md`, or a `Skipped:` line | `/opsx:propose` → `superpowers:brainstorming` |
+| Plan/tasks | `tasks.md`, one checkbox per task | `/opsx:propose` → `superpowers:writing-plans` |
+| Steps (build) | code, ticked `tasks.md` | `/opsx:apply` → `superpowers:subagent-driven-development` |
+| Finish | archived change, specs merged; then merge or PR | `/opsx:apply` → `openspec archive`, `superpowers:finishing-a-development-branch` |
+
+**Notes:**
+
+- Ask `/opsx:explore` to capture the change and it runs `/opsx:propose` for you.
+- If brainstorming changes scope or behavior, the agent updates `proposal.md` and `specs/`, validates the change,
+  and lists the edits when asking for design approval. To revise the planning artifacts yourself after
+  `/opsx:propose` stops, run `/opsx:update <change-name>`.
 
 ## Install
 
@@ -107,21 +114,35 @@ The normal flow is three commands:
 ```
 
 Run `/opsx:propose` in the same session as the exploration: brainstorming builds on that conversation instead of
-asking again.
+asking again. To continue an interrupted `/opsx:propose`, run it again with the same change name inside the
+worktree; it asks whether to continue the existing change.
 
 Other OpenSpec commands you may run yourself (which ones `openspec init` generates depends on your profile):
 
 | Command | When |
 |---|---|
 | `/opsx:update <change-name>` | Revise a change's planning artifacts after review, keeping them coherent |
+| `/opsx:verify <change-name>` | Check the code against the change's specs and design, e.g. after an apply run that stopped before finishing; expanded profile only (`openspec config profile`, then `openspec update`) |
 | `/opsx:sync <change-name>` | Merge a change's delta specs into `openspec/specs/` without archiving it |
 | `/opsx:archive <change-name>` | Archive by hand, e.g. after an apply run that stopped before finishing |
+
+CLI commands to see where a change stands. Run them in the change's worktree: the change folder exists only on
+its branch.
+
+| Command | When |
+|---|---|
+| `openspec status --change <change-name>` | Which artifacts are done and which step is next |
+| `openspec list` / `openspec list --specs` | Changes in flight / specs merged so far |
+| `openspec show <change-name>` | Read a change or spec in the terminal |
+| `openspec validate <change-name>` | Check the artifacts after editing them by hand |
+| `openspec view` | Interactive dashboard |
 
 superpowers skills that fit outside the automated flow:
 
 | Skill | When |
 |---|---|
 | `superpowers:systematic-debugging` | A bug, failing test, or unexpected behavior, before proposing a fix |
+| `superpowers:dispatching-parallel-agents` | Two or more independent problems, e.g. unrelated test failures, worked on in parallel |
 | `superpowers:test-driven-development` | Small fixes you make without a change folder |
 | `superpowers:verification-before-completion` | Before claiming something works or is done |
 | `superpowers:requesting-code-review` | A review of work done outside `/opsx:apply` |
