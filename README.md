@@ -19,8 +19,9 @@ workflow.
 
 - **Specs stay the source of truth:** every scenario is covered by a test in the plan; archive merges the deltas
   into `openspec/specs/`.
-- **Design only when needed:** brainstorming checks whether the request leaves anything open and asks
-  "Skip the design?"; the design is skipped only on your explicit yes.
+- **Design only when needed:** brainstorming reads the code the change touches and offers "Skip the design?" only
+  when nothing is open in what gets built or how, or when you ask to just get going (then recommending against it if
+  something is open); the design is skipped only on your explicit yes.
 - **Isolated change:** each change runs on its own branch in `.worktrees/<change-name>/`, which the agent creates
   by the rules in `AGENTS.md`.
 - **Plan before build:** `/opsx:propose` stops at an approved, committed plan; only `/opsx:apply` builds.

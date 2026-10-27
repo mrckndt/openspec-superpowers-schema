@@ -201,16 +201,34 @@ artifacts:
       played back in a few lines, so the user can correct it before any
       question; its question then follows the steps below.
 
-      Brainstorming first judges whether anything that matters is still open:
-      1. If everything that matters is settled in proposal.md and specs/ (an
-         empty Assumptions section), or the user takes brainstorming's offer
-         to just get going, ask exactly: "Skip the design?"
-      2. Only an explicit yes to that question skips the design; a short or
+      Brainstorming first judges whether anything that matters is still open,
+      in what gets built and in how it gets built. An empty Assumptions
+      section settles only what gets built.
+      1. Read the code the change touches and note each how-trigger that
+         applies:
+         - a cross-cutting change (multiple modules) or a pattern the code
+           does not use yet
+         - a new dependency, data flow, or data model change
+         - security, performance, or migration complexity
+         - a framework or platform limit that rules out the obvious way
+         - existing behavior the change touches beyond what specs/ lists,
+           such as layout, focus, or event handling
+         - a how-choice with more than one reasonable option that changes
+           the tasks or tests
+      2. If the Assumptions section is empty and no how-trigger applies, ask
+         exactly: "Skip the design?" If the user takes brainstorming's offer
+         to just get going, at any point, ask it then as well; while an
+         Assumption is open or a how-trigger applies, ask exactly instead:
+         "Skip the design? I recommend against it: <each open Assumption
+         and how-trigger, one per line>."
+      3. Only an explicit yes to that question skips the design; a short or
          ambiguous answer to another question is not a yes. Write design.md
          with `Skipped: <reason>` as its first line, then one line per
-         how-it-gets-made choice (language, libraries).
-      3. Any other answer, or anything still open: run brainstorming to
-         approval and save its design doc to
+         how-it-gets-made choice (language, libraries), and one line per
+         open Assumption and how-trigger:
+         `<assumption or trigger>: <the call you made> (agent's call)`.
+      4. Any other answer, an open Assumption, or a how-trigger that
+         applies: run brainstorming to approval and save its design doc to
          openspec/changes/<change-name>/design.md, not docs/superpowers/specs/.
          Use the template's headings.
 
@@ -267,7 +285,8 @@ artifacts:
         `git worktree list` prints.
       - Before planning, resolve with the user every choice in design.md that
         is still open and would change what gets built. If design.md starts
-        with `Skipped:`, plan from proposal.md and specs/.
+        with `Skipped:`, plan from proposal.md, specs/, and every line under
+        the `Skipped:` line; lines marked `(agent's call)` count as settled.
       - If self-review finds an error in proposal.md, specs/ or design.md,
         fix it there and list each behavior or scope edit when asking for
         plan approval. Typo and format fixes need no mention.
@@ -316,7 +335,8 @@ apply:
       - Every `#### Scenario:` is covered by a test; an uncovered one is
         Important.
       - Every design.md decision is followed; a deviation is Important.
-        Skip this check when design.md starts with `Skipped:`.
+        When design.md starts with `Skipped:`, the decisions are every
+        line under the `Skipped:` line.
       - No code path still delivers a REMOVED requirement; one that does
         is Critical.
       These findings go through the skill's fix wave like any other.
