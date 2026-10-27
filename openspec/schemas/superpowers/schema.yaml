@@ -215,10 +215,10 @@ artifacts:
            such as layout, focus, or event handling
          - a how-choice with more than one reasonable option that changes
            the tasks or tests
-      2. If the Assumptions section is empty and no how-trigger applies, ask
-         exactly: "Skip the design?" If the user takes brainstorming's offer
-         to just get going, at any point, ask it then as well; while an
-         Assumption is open or a how-trigger applies, ask exactly instead:
+      2. Ask exactly "Skip the design?" when the Assumptions section is
+         empty and no how-trigger applies, and whenever the user takes
+         brainstorming's offer to just get going. If an Assumption is open
+         or a how-trigger applies at that point, ask exactly instead:
          "Skip the design? I recommend against it: <each open Assumption
          and how-trigger, one per line>."
       3. Only an explicit yes to that question skips the design; a short or
@@ -227,8 +227,7 @@ artifacts:
          how-it-gets-made choice (language, libraries), and one line per
          open Assumption and how-trigger:
          `<assumption or trigger>: <the call you made> (agent's call)`.
-      4. Any other answer, an open Assumption, or a how-trigger that
-         applies: run brainstorming to approval and save its design doc to
+      4. Otherwise, run brainstorming to approval and save its design doc to
          openspec/changes/<change-name>/design.md, not docs/superpowers/specs/.
          Use the template's headings.
 
