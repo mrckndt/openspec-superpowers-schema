@@ -37,7 +37,10 @@ OpenSpec owns the artifacts in `openspec/changes/<change-name>/`; superpowers ow
   ask how to handle them; leave the files as they are until the user answers. If the base branch has no
   upstream, skip finishing's `git pull`.
 
-## Claude Code: worktree tools
+## Claude Code
 
-- Switch into a worktree: `EnterWorktree` with its `path`.
-- Before finishing removes the worktree: `ExitWorktree` with `keep`.
+- **Switch into a worktree:** `EnterWorktree` with its `path`.
+- **Before finishing removes the worktree:** `ExitWorktree` with `keep`.
+- **Subagent models:** never above Opus (such as Fable). Read each superpowers model choice that goes higher
+  ("most capable available model", "a tier above", "a more capable model") as Opus. Name the model on every
+  dispatch: an omitted one inherits the session's.
