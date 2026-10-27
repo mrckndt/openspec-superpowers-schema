@@ -306,6 +306,17 @@ apply:
     - For the final whole-branch review, set MERGE_BASE to
       `git merge-base <base branch> HEAD`, with `<base branch>` from the
       plan header's `**Base branch:**` line.
+    - In the final whole-branch review dispatch, also point the reviewer at
+      the change's specs/ and design.md, and have it check the whole branch:
+      - Every ADDED and MODIFIED requirement is implemented; a missing one
+        is Critical.
+      - Every `#### Scenario:` is covered by a test; an uncovered one is
+        Important.
+      - Every design.md decision is followed; a deviation is Important.
+        Skip this check when design.md starts with `Skipped:`.
+      - No code path still delivers a REMOVED requirement; one that does
+        is Critical.
+      These findings go through the skill's fix wave like any other.
     - After the final whole-branch review, when the skill's next steps are to
       delete its workspace and invoke superpowers:finishing-a-development-branch,
       pause there. Before deleting anything, check:
