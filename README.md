@@ -162,16 +162,21 @@ flow is three commands:
 
 **Continuing in a new session:** the approved plan is committed on the change's branch, in
 `.worktrees/<change-name>/`, so closing the agent after `/opsx:propose` loses nothing. A new session starts in the
-main checkout, where the change folder does not exist. From the project root, switch into the worktree:
+main checkout, where the change folder does not exist.
 
-```
-git worktree list              # shows the path if you forgot it
-cd .worktrees/<change-name>
-```
+- **Claude Code:** start it in the project root and ask the agent to switch into the worktree, then run
+  `/opsx:apply <change-name>`. Starting it inside the worktree breaks cleanup: finishing removes the session's
+  working directory.
+- **Other agents:** from the project root, switch into the worktree, then start your agent in that folder and run
+  `/opsx:apply <change-name>`:
 
-Then start your agent in that folder and run `/opsx:apply <change-name>`. To finish an interrupted
-`/opsx:propose`, run it again with the same change name; it asks whether to continue the existing change. In
-Claude Code you can also stay in the project root and ask the agent to switch into the worktree.
+  ```
+  git worktree list              # shows the path if you forgot it
+  cd .worktrees/<change-name>
+  ```
+
+To finish an interrupted `/opsx:propose`, run it again with the same change name; it asks whether to continue the
+existing change.
 
 Run the `/opsx:*` commands and `openspec status`, `show` and `validate` from the change's worktree.
 
