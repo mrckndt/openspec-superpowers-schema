@@ -30,8 +30,7 @@ OpenSpec owns the artifacts in `openspec/changes/<change-name>/`; superpowers ow
     main checkout by absolute path.
 - **Missing skill:** if a superpowers skill this file names is unavailable, say so and stop; never substitute your
   own version of it. The schema checks the skills its steps invoke.
-- **Plan approved:** commit the change folder, then stop. Execution starts only when the user runs
-  `/opsx:apply`, which uses superpowers:subagent-driven-development, never inline execution.
+- **Execution:** starts only when the user runs `/opsx:apply`.
 - **Apply after the last task:** when `/opsx:apply` reports all tasks done and the change folder is still in
   `openspec/changes/<change-name>/` (not archived), the CLI leaves out the schema's apply instruction. Read
   `apply.instruction` in `openspec/schemas/superpowers/schema.yaml` and continue from its final-review checks.
