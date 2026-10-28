@@ -33,6 +33,10 @@
 
 <!-- Known risks and trade-offs -->
 
+## Migration Plan
+
+<!-- Steps to deploy, rollback strategy. Omit if not applicable -->
+
 ## Open Questions
 
 <!-- Only unknowns that can be answered later without changing specs, approach, or tasks. Omit if none -->

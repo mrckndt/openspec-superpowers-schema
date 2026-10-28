@@ -207,6 +207,8 @@ artifacts:
          - A framework or platform limit that rules out the obvious way
          - Existing behavior the change touches beyond what specs/ lists,
            such as layout, focus, or event handling
+         - A how-choice with more than one reasonable option that changes
+           the tasks or tests
       2. Ask exactly "Skip the design?" when the Assumptions section is
          empty and no how-trigger applies, and whenever the user takes
          brainstorming's offer to just get going. If an Assumption is open
@@ -219,15 +221,17 @@ artifacts:
          how-it-gets-made choice (language, libraries), and one line per
          open Assumption and how-trigger:
          `<assumption or trigger>: <the call you made> (agent's call)`.
-      4. Otherwise, run brainstorming to approval and save its design doc to
+      4. Otherwise, run brainstorming to approval. Lay out the approaches in
+         a message of their own and let the user pick one before you write
+         design.md. Save its design doc to
          openspec/changes/<change-name>/design.md, not docs/superpowers/specs/.
-         Use the template's headings.
+         Use the template's headings, filled as the sections below describe.
 
-      Sections:
+      Sections of the design doc brainstorming writes in step 4:
       - **Context**: Only the current state and constraints needed to explain the approach. Reference the proposal for motivation instead of restating it (e.g., "See proposal.md - Why").
       - **Goals / Non-Goals**: What this design achieves and explicitly excludes. Don't restate the proposal's scope - add only design-level boundaries. Add **Anti-Goals**: what would make this a failure even if it technically works.
       - **Approaches**: The two or three ways considered, what each trades off, which one the user picked, and why.
-      - **Decisions**: Key technical choices with rationale (why X over Y?). Include alternatives considered for each decision. Mark the calls you made yourself as yours.
+      - **Decisions**: Key technical choices within the approach the user picked, with rationale (why X over Y?). Include alternatives considered for each decision. Mark the calls you made yourself as yours.
       - **Left to the Builder**: What a sensible builder can settle without changing what gets built.
       - **Risks / Trade-offs**: Known limitations, things that could go wrong. Format: [Risk] → Mitigation
       - **Migration Plan**: Steps to deploy, rollback strategy (if applicable)
