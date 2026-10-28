@@ -344,8 +344,14 @@ apply:
       section. Write the section once to `global-constraints.md` in the
       skill's workspace directory for this plan (where its task briefs go)
       and point each dispatch at it.
-    - When the skill records `Task N` as complete, change that task's
-      `- [ ] Task N:` line in tasks.md to `- [x] Task N:` and commit tasks.md.
+    - When the skill records `Task N` as complete, mark that task complete
+      at its returned `sourcePath` and `line` from
+      `openspec instructions apply --change "<change-name>" --json`:
+      `- [ ]` → `- [x]`. Before editing, confirm the checkbox at that
+      location still matches the task description; if it does not, rerun the
+      apply instructions and use the refreshed location. Rerun the apply
+      instructions and confirm that task is now done and progress changed,
+      then commit tasks.md.
     - For the final whole-branch review, set MERGE_BASE to
       `git merge-base <base branch> HEAD`, with `<base branch>` from the
       plan header's `**Base branch:**` line.
