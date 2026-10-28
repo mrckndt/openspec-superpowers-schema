@@ -11,7 +11,8 @@ artifacts:
 
       Sections:
       - **Why**: 1-2 sentences on the problem or opportunity. What problem does this solve? Why now?
-      - **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or removals. Mark breaking changes with **BREAKING**.
+      - **Users**: Who or what uses the result: people, roles, or downstream systems. If the user has not said, write your best guess and also list it under Assumptions.
+      - **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or removals. Mark breaking changes with **BREAKING**. End with an `Out of scope:` list of what the change leaves out, if the user named any.
       - **Capabilities**: Identify which specs will be created or modified:
         - **New Capabilities**: List capabilities being introduced. Each becomes a new `specs/<capability-path>/spec.md`. Name each capability for a durable system behavior (for example, `user-auth`), not the work in this change (for example, `add-login-endpoint`). Choose a cohesive boundary that can own related requirements as the system evolves; avoid broad catch-all capabilities. Use kebab-case for path segments you introduce (e.g., `user-auth` or `identity/user-auth`) and follow the project's existing spec organization.
         - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Use the exact existing path under `openspec/specs/`. Leave empty if no requirement changes.
@@ -233,8 +234,8 @@ artifacts:
 
       This step plans only: offer no spikes, since they write project code.
       If brainstorming finds several independent projects, ask the user which
-      one this change covers and note the others under What Changes in
-      proposal.md as out of scope.
+      one this change covers and add the others to the `Out of scope:` list
+      under What Changes in proposal.md.
 
       Leave design.md uncommitted: the tasks step commits the change folder
       after plan approval.

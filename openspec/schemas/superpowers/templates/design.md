@@ -12,7 +12,7 @@
 <!-- What this design aims to achieve -->
 
 **Non-Goals:**
-<!-- What is explicitly out of scope -->
+<!-- Design-level boundaries only. Point to proposal.md - What Changes, Out of scope for the change's scope instead of restating it -->
 
 **Anti-Goals:**
 <!-- What would make this a failure even if it technically works -->

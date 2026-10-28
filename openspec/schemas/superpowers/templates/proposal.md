@@ -4,9 +4,13 @@
 
 <!-- Explain the motivation for this change. What problem does this solve? Why now? -->
 
+## Users
+
+<!-- Who or what uses the result: people, roles, or downstream systems. If the user has not said, list it under Assumptions too. -->
+
 ## What Changes
 
-<!-- Describe what will change. Be specific about new capabilities, modifications, or removals. -->
+<!-- Describe what will change. Be specific about new capabilities, modifications, or removals. End with an "Out of scope:" list of what this change leaves out, if the user named any. -->
 
 ## Decided
 
