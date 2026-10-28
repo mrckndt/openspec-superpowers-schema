@@ -269,13 +269,23 @@ artifacts:
       skills, tell the user the superpowers plugin is missing and stop.
       Never write the plan yourself in its place.
 
+      Before writing tasks, check design.md for Open Questions. If any of them
+      would change what gets built, resolve them with the user first - do not
+      bake an unstated assumption into the task list. If design.md starts
+      with `Skipped:`, plan from proposal.md, specs/, and every line under
+      the `Skipped:` line; lines marked `(agent's call)` count as settled.
+
       Invoke the superpowers:writing-plans skill and save its plan to
       openspec/changes/<change-name>/tasks.md, not docs/superpowers/plans/.
       On top of its format:
-      - Task format: OpenSpec counts every `- [ ]` line, even inside code
-        blocks, while apply works in whole tasks. Put exactly one checkbox
-        directly under each task heading, and write steps as bold lines
-        without checkboxes:
+      - Task format: The apply phase parses checkbox format to track progress.
+        A box holding only `x` counts as done, upper or lower case and with
+        any spacing, so `- [ x]` is done too. Every other marker, including
+        `- [~]`, `- [-]` and an empty `- []`, reads as unfinished. A line with
+        no checkbox is not tracked at all. OpenSpec counts every `- [ ]` line,
+        even inside code blocks, while apply works in whole tasks. Put
+        exactly one checkbox directly under each task heading, and write
+        steps as bold lines without checkboxes:
         ```
         ### Task 1: <task name>
         - [ ] Task 1: <task name>
@@ -296,13 +306,11 @@ artifacts:
       - Refer to untracked or git-ignored files (not in the worktree) by
         their absolute path in the main checkout, the first path
         `git worktree list` prints.
-      - Before planning, resolve with the user every choice in design.md that
-        is still open and would change what gets built. If design.md starts
-        with `Skipped:`, plan from proposal.md, specs/, and every line under
-        the `Skipped:` line; lines marked `(agent's call)` count as settled.
       - If self-review finds an error in proposal.md, specs/ or design.md,
         fix it there and list each behavior or scope edit when asking for
         plan approval. Typo and format fixes need no mention.
+
+      Reference specs for what needs to be built, design for how to build it.
 
       When the user approves the plan: commit the change folder, tell them
       to run /opsx:apply, and stop. Skip the execution-method question and
