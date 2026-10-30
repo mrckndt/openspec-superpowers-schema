@@ -5,34 +5,39 @@ steps through the matching [superpowers](https://github.com/obra/superpowers) sk
 
 ## What it is and why
 
-- **OpenSpec** owns the artifacts: one folder per change, `openspec/changes/<change-name>/`, validated by the CLI
-  and merged into `openspec/specs/` on archive. `<change-name>` is a short kebab-case name; the agent derives one
-  if you give none.
-- **superpowers** owns the process: brainstorming before building, TDD plans, subagent execution with a review
-  per task.
+- **[OpenSpec](https://github.com/Fission-AI/OpenSpec) brings spec-driven development (the what).** Before any code
+  exists, you and the agent agree in writing on why a change is needed and what "done" means, as testable
+  requirements in `openspec/changes/<change-name>/`. You review words instead of code, and on archive the specs
+  are merged into `openspec/specs/`, which stays a current description of what your system does.
+- **[superpowers](https://github.com/obra/superpowers) brings test-driven development (the how).** A short design
+  discussion with you settles the approach, a plan breaks it into tasks, and subagents build them test-first, each
+  task reviewed by a fresh reviewer.
 
-Alone they clash: superpowers writes to `docs/superpowers/`, OpenSpec to the change folder, and each has its own
-execution loop. This schema and the rules in `AGENTS.md` (copied into your project during install) make them one
-workflow.
+Used together, the specs say what to build and the tests prove it was built. On their own the two don't know about
+each other and write to different places (`docs/superpowers/` vs. the change folder). This schema and the rules in
+`AGENTS.md` (copied into your project during install) hand the work from one to the other:
 
-**What you get:**
+1. **OpenSpec writes the what:** `proposal.md` and `specs/`, on a branch of its own in `.worktrees/<change-name>/`.
+2. **superpowers writes the how:** `design.md` and `tasks.md` (which `/opsx:propose` would normally write itself),
+   into the same change folder. The design
+   discussion (superpowers' brainstorming skill) starts from the proposal and specs, so it only asks the last
+   questions. `/opsx:propose` stops at the approved plan; only `/opsx:apply` builds.
+3. **superpowers builds:** test-first, task by task, each reviewed, then a whole-branch review against the specs and
+   design. Unfixed Critical or Important findings, open tasks or failing tests stop the run before archive.
+4. **OpenSpec archives:** the specs are merged into `openspec/specs/`. Every scenario has a test, so they stay the
+   source of truth.
 
-- **Specs stay the source of truth:** every scenario is covered by a test in the plan; archive merges the deltas
-  into `openspec/specs/`.
-- **Design only when needed:** brainstorming reads the code the change touches and offers "Skip the design?" only
-  when nothing is open in what gets built or how, or when you ask to just get going (then recommending against it if
-  something is open); the design is skipped only on your explicit yes.
-- **Isolated change:** each change runs on its own branch in `.worktrees/<change-name>/`, which the agent creates
-  by the rules in `AGENTS.md`.
-- **Plan before build:** `/opsx:propose` stops at an approved, committed plan; only `/opsx:apply` builds.
-- **Reviewed execution:** a fresh implementer and reviewer per task, then a whole-branch review that also checks
-  the code against the specs and design. Unfixed Critical or Important findings, open tasks or failing tests stop
-  the run before archive and merge; you decide how to continue.
-
-**The workflow:**
+**The workflow** combines OpenSpec's [loop](https://openspec.dev/docs/quickstart#the-loop-at-a-glance) with
+superpowers' [basic workflow](https://github.com/obra/superpowers#the-basic-workflow), in two views. What you type:
 
 ```
-explore → proposal → specs → design → plan/tasks → build → finish
+/opsx:explore → /opsx:propose → /opsx:apply
+```
+
+And the steps behind it, in order (the table below lists each step's artifact, command and skill):
+
+```
+explore → proposal → specs → design → tasks → build → archive
 ```
 
 | Step | Artifact | Command | Skill |
@@ -45,8 +50,8 @@ explore → proposal → specs → design → plan/tasks → build → finish
 | Build | code, ticked `tasks.md` | `/opsx:apply` | `superpowers:subagent-driven-development` |
 | Finish | archived change, specs merged into `openspec/specs/` | `/opsx:apply` (runs `openspec archive`) | `superpowers:finishing-a-development-branch` |
 
-**Note:** the plan is `tasks.md`. If brainstorming changes scope or behavior, the agent updates `proposal.md` and
-`specs/`, validates the change, and lists the edits when asking for design approval.
+**Note:** if brainstorming changes scope or behavior, the agent updates `proposal.md` and `specs/`, validates the
+change, and lists the edits when asking for design approval.
 
 ## Install
 
@@ -150,12 +155,15 @@ flow is three commands:
 
 ```
 /opsx:explore                 # think it through, read the code; writes nothing until you ask it to capture
-/opsx:propose <change-name>   # worktree (per AGENTS.md), proposal, specs, design, plan; stops at the approved plan
-/opsx:apply <change-name>     # subagent-driven build, archive, finish
+/opsx:propose <change-name>   # worktree (per AGENTS.md), proposal, specs, then design and plan; stops at the approved plan
+/opsx:apply <change-name>     # test-first build with reviews, archive, finish
 ```
 
-- **Same session:** run `/opsx:propose` in the same session as the exploration; otherwise brainstorming asks its
-  questions again.
+- **Same session:** run `/opsx:propose` in the same session as the exploration; otherwise brainstorming has to ask
+  again what you already settled.
+- **Review the plan:** `/opsx:propose` stops with the plan written, before any code. Read `proposal.md`, then
+  `specs/` (would you accept these requirements as done?), then `tasks.md`. Edit the files or tell the agent what
+  is wrong; `/opsx:update` revises them coherently.
 - **Capture shortcut:** instead of typing `/opsx:propose`, tell the agent in the explore session to capture the
   change (optionally naming it); with the rules from `AGENTS.md` it creates the worktree and runs `/opsx:propose`
   inside it.
