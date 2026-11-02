@@ -209,12 +209,15 @@ artifacts:
            such as layout, focus, or event handling
          - A how-choice with more than one reasonable option that changes
            the tasks or tests
-      2. Ask exactly "Skip the design?" when the Assumptions section is
-         empty and no how-trigger applies, and whenever the user takes
-         brainstorming's offer to just get going. If an Assumption is open
-         or a how-trigger applies at that point, ask exactly instead:
-         "Skip the design? I recommend against it: <each open Assumption
-         and how-trigger, one per line>."
+      2. Ask whether to skip in these two cases only:
+         - The Assumptions section is empty and no how-trigger applies:
+           ask exactly "Skip the design?"
+         - The user takes brainstorming's offer to just get going: ask
+           exactly "Skip the design?" if nothing is open. If an Assumption
+           is open or a how-trigger applies, ask exactly instead: "Skip the
+           design? I recommend against it: <each open Assumption and
+           how-trigger, one per line>."
+         In every other case, go to step 4.
       3. Only an explicit yes to that question skips the design; a short or
          ambiguous answer to another question is not a yes. Write design.md
          with `Skipped: <reason>` as its first line, then one line per
@@ -300,10 +303,10 @@ artifacts:
         ```
         > **For agentic workers:** Execute with /opsx:apply, which runs superpowers:subagent-driven-development task-by-task. Each task has one checkbox (`- [ ]`) for tracking.
         ```
-        Under it, add `**Base branch:** <base branch>`, using the base branch
-        recorded before the worktree was created (ask the user if it is not
-        known): the final review's merge-base and finishing's merge target
-        use it.
+        Under it, after a blank line (without one, Markdown folds it into
+        the quote), add `**Base branch:** <base branch>`, using the base
+        branch recorded before the worktree was created (ask the user if it
+        is not known): finishing's merge target uses it.
       - Set the header's `**Spec:**` field to
         `openspec/changes/<change-name>/`, and name every `#### Scenario:`
         from specs/ in at least one test step.
