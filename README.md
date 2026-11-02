@@ -126,10 +126,12 @@ Run these in one terminal from your project root, after [Prepare the project](#p
      reads `AGENTS.md` on its own (v2.1.277 or later) only when no `CLAUDE.md` exists in the project or above
      it, so it needs this import whenever one does.
    - **Other agents:** leave out the `Claude Code` section.
-5. Add this line to `.gitignore` (create the file if it is missing, skip it if the line is already there, and
-   start a new line first if the last one has no trailing newline):
+5. Add these lines to `.gitignore` (create the file if it is missing, skip a line that is already there, and
+   start a new line first if the last one has no trailing newline). `.superpowers/` keeps brainstorm mockups
+   out of the change's commits:
    ```
    .worktrees/
+   .superpowers/
    ```
 6. Check that OpenSpec picks it up. The output of the first command contains `Schema 'superpowers' is valid`,
    the second lists `superpowers (project)`:

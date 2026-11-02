@@ -37,14 +37,33 @@ OpenSpec owns the artifacts in `openspec/changes/<change-name>/`; superpowers ow
 - **Local merge when finishing:** shell variables do not survive between commands. In finishing's Step 2, print
   `GIT_DIR`, `GIT_COMMON` and `WORKTREE_PATH`, note the values, and use them in Step 6; never recompute them
   after leaving the worktree. `<main-checkout>` is the first path `git worktree list` prints. Before merging:
-  1. Run `git -C <worktree> status --porcelain`. If it lists files, show them to the user and ask whether to
+  1. Check for the SDD ledger `<WORKTREE_PATH>/.superpowers/sdd/tasks/progress.md`. If it exists, the apply run
+     stopped before its close-out, and `git worktree remove` would delete the git-ignored ledger. Then:
+     - If the ledger has no `Final: review` line, the final review never ran: stop and tell the user to rerun
+       `/opsx:apply` from the worktree.
+     - Otherwise show the user the unfixed findings from the ledger's `Final:` lines and ask whether they
+       accept each one.
+     - If the user accepts all of them, `openspec instructions apply --change "<change-name>" --json` reports
+       `all_done` and the full test suite passes: append `Final: User accepted: <finding>` to the ledger for
+       each, then run close-out steps 1 to 6 of `apply.instruction` in
+       `openspec/schemas/superpowers/schema.yaml` (specs and design, `rulings.md`, reports, workspace, archive,
+       commit) in the worktree.
+     - In every other case, stop and report to the user what is still open.
+  2. Save the brainstorm mockups: the visual companion wrote them to the git-ignored
+     `<WORKTREE_PATH>/.superpowers/brainstorm/`, which `git worktree remove` deletes. If that folder exists, create
+     `<main-checkout>/.superpowers/brainstorm/<change-name>/` and move each session folder into it. Leave
+     `.last-port` and `.last-token` where they are.
+  3. Run `git -C <worktree> status --porcelain`. If it lists files, show them to the user and ask whether to
      commit them to `<change-name>` first: uncommitted files are not part of the merge.
-  2. Run `git -C <main-checkout> status --porcelain` and `git diff --name-only <base-branch>...<change-name>`.
+  4. Run `git -C <main-checkout> status --porcelain` and
+     `git -C <main-checkout> diff --name-only <base-branch>...<change-name>`.
      If a path appears in both, show those paths to the user and ask how to handle them; leave the files as
      they are until the user answers.
-  3. If the base branch has no upstream, skip finishing's `git pull`.
+  5. If the base branch has no upstream, skip finishing's `git pull`.
   - Run each main-checkout command of Step 5 and Step 6 as `git -C <main-checkout> ...`, including
-    `git -C <main-checkout> worktree remove <WORKTREE_PATH>`.
+    `git -C <main-checkout> worktree remove <WORKTREE_PATH>`, and skip Step 5's `cd "$MAIN_ROOT"`. Run the
+    tests on the merged result as `(cd <main-checkout> && <test command>)`: the subshell leaves the session's
+    working directory unchanged.
 
 ## Claude Code
 
