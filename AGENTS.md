@@ -8,9 +8,11 @@ OpenSpec owns the artifacts in `openspec/changes/<change-name>/`; superpowers ow
 - **Capturing a change:** when the user wants to capture a request or an exploration as a change, also from inside
   `/opsx:explore`, do these steps in order:
   1. If the request leaves open who or what will use the result, ask that as one open question. Leave every other
-     open question to brainstorming in the design step.
+     open question to brainstorming in the design step, also where `/opsx:propose` says to ask before creating
+     the change: record each under Assumptions in proposal.md.
   2. Change name: the one the user gave; otherwise derive a kebab-case name from the request without asking.
-  3. Create the worktree (below), then run `/opsx:propose <change-name>` inside it.
+  3. Create the worktree (below), then run `/opsx:propose <change-name>` inside it. Skip the capture steps of
+     `/opsx:explore`, including its `openspec new change`: `/opsx:propose` creates the change inside the worktree.
 - **IMPORTANT - output paths:** design doc: `openspec/changes/<change-name>/design.md`; plan:
   `openspec/changes/<change-name>/tasks.md`. Never create files under `docs/superpowers/`.
 - **Worktree:** create it via superpowers:using-git-worktrees, without asking, in these steps:
@@ -67,11 +69,17 @@ OpenSpec owns the artifacts in `openspec/changes/<change-name>/`; superpowers ow
 
 ## Claude Code
 
-- **Switch into a worktree:** only with `EnterWorktree` and its `path`, never with `cd`: a `cd` in a Bash call
-  persists, and `EnterWorktree` then refuses the path as the current working directory. If it does, say so and
-  continue in the worktree; the session then has no `EnterWorktree` to exit.
+- **Switch into a worktree:** in the main session, only with `EnterWorktree` and its `path`, never with `cd`: a
+  `cd` in a Bash call persists, and `EnterWorktree` then refuses the path as the current working directory. If it
+  does, say so and continue in the worktree; the session then has no `EnterWorktree` to exit.
+- **Subagents:** `EnterWorktree` refuses `.worktrees/` paths in a subagent, and a subagent's `cd` does not
+  persist. A subagent runs every command as `cd <worktree> && ...`; name the worktree's absolute path and this
+  rule in every dispatch.
+- **Report files:** in every implementer and fixer dispatch, give the report file's absolute path and add this
+  line: "Write your report to this file. It is a required process file that the controller reads."
 - **Before finishing's Step 6:** after the merged result passes its tests, if `EnterWorktree` switched this session
-  into the worktree, call `ExitWorktree` with `keep`. Call it no earlier: Step 2 must run inside the worktree.
+  into the worktree, call `ExitWorktree` with `keep`; this rule is the user's request for that call. Call it no
+  earlier: Step 2 must run inside the worktree.
 - **New session on a change:** start Claude Code in the main checkout and switch with `EnterWorktree`. A session
   started inside `.worktrees/<change-name>` loses its working directory when finishing removes the worktree.
 - **Subagent models:** never above Opus (such as Fable). Read each superpowers model choice that goes higher
