@@ -23,7 +23,9 @@ each other and write to different places (`docs/superpowers/` vs. the change fol
    discussion (superpowers' brainstorming skill) starts from the proposal and specs, so it only asks the last
    questions. `/opsx:propose` stops at the approved plan; only `/opsx:apply` builds.
 3. **superpowers builds:** test-first, task by task, each reviewed, then a whole-branch review against the specs and
-   design. Unfixed Critical or Important findings, open tasks or failing tests stop the run before archive.
+   design. Unfixed Critical or Important findings, open tasks or failing tests stop the run before archive. If
+   only findings are left, you can accept each one; the run then continues and `rulings.md` records each
+   acceptance.
 4. **OpenSpec archives:** the specs are merged into `openspec/specs/`. Every scenario has a test, so they stay the
    source of truth.
 
@@ -197,7 +199,7 @@ expanded profile: `openspec config profile`, then `openspec update`):
 | `/opsx:update <change-name>` | Revise a change's proposal, specs, design and plan after `/opsx:propose` stops; the agent confirms each edit with you and keeps them coherent |
 | `/opsx:verify <change-name>` | Check the code against the change's specs and design (expanded profile) |
 | `/opsx:sync <change-name>` | Merge a change's delta specs into `openspec/specs/` without archiving it |
-| `/opsx:archive <change-name>` | Archive manually, e.g. after an apply run that stopped before finishing |
+| `/opsx:archive <change-name>` | Archive manually. After an apply run that stopped, rerun `/opsx:apply` instead: a plain archive skips `rulings.md` and `reports/`, and the build ledger is lost with the worktree |
 
 **CLI commands to inspect and validate a change:**
 

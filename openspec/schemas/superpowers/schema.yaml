@@ -353,9 +353,24 @@ apply:
       apply instructions and use the refreshed location. Rerun the apply
       instructions and confirm that task is now done and progress changed,
       then commit tasks.md.
-    - For the final whole-branch review, set MERGE_BASE to
-      `git merge-base <base branch> HEAD`, with `<base branch>` from the
-      plan header's `**Base branch:**` line.
+    - When a fix round or the final fix wave fixes a finding the ledger
+      lists as `minor (deferred)`, append
+      `<same prefix>: minor resolved: <same one-liner>` to the ledger in
+      the same message as your other bookkeeping, where `<same prefix>` is
+      the deferred line's prefix (such as `Task <N>`).
+    - When a fix round or the final fix wave adds no commits, skip its
+      scoped re-review: `review-package` exits 3 on an empty commit range.
+      Ledger the round with `commits none` and every finding still open.
+      If the fixer reported BLOCKED, pick the fix for its blocker from
+      references/handling-reports.md (more context, a more capable model,
+      a smaller task, or a ruling) and apply it before the next round.
+      Then continue as the skill says for open findings.
+    - For the final whole-branch review, set MERGE_BASE to the commit
+      that added the plan:
+      `git log --diff-filter=A --format=%H -1 -- ':/openspec/changes/<change-name>/tasks.md'`
+      (the `:/` makes the path work from any directory).
+      An earlier base would fill the review package with planning
+      commits; the reviewer reads specs/ and design.md directly.
     - In the final whole-branch review dispatch, also point the reviewer at
       the change's specs/ and design.md, and have it check the whole branch:
       - Every ADDED and MODIFIED requirement is implemented; a missing one
@@ -367,7 +382,20 @@ apply:
         line under the `Skipped:` line.
       - No code path still delivers a REMOVED requirement; one that does
         is Critical.
-      These findings go through the skill's fix wave like any other.
+      These findings go through the skill's fix wave like any other. In
+      the fix wave dispatch, have the fixer write its report to
+      `final-fix-report.md` in the skill's workspace for this plan.
+    - Ledger the final whole-branch review; the skill records only
+      rulings, and a later session has only the ledger:
+      1. When the review returns, append `Final: review (<K> findings)`,
+         then one line per finding: `Final: <severity>: <finding>`.
+      2. After the fix wave and your adjudication, append exactly one
+         outcome line per finding:
+         `Final: <severity>: <finding> — <outcome>`. `<outcome>` is one of:
+         - `fixed <sha7>`: a commit fixed it.
+         - `Ruling: <why>`: you parked it or ruled on it, also when you
+           sent it to no fixer.
+         - `open`: a Minor left as it is.
     - After the final whole-branch review, when the skill's next steps are to
       delete its workspace and invoke superpowers:finishing-a-development-branch,
       pause there. Before deleting anything, check:
@@ -378,12 +406,49 @@ apply:
         `all_done` passes.
       - The project's full test suite.
       If any finding is unfixed, the state is not `all_done`, or the suite
-      fails: stop and report to the user, showing the unfixed findings with
+      fails: stop and report to the user, showing the unfixed findings from
+      the `Final:` ledger lines with
       every ruling the skill made during the run, the open tasks, and the
-      failing tests. The user decides how to continue; unfixed findings never
-      go into a merge.
-    - Otherwise, in this order: finish the skill's own close-out (report its
-      rulings, delete its workspace for this plan); run
-      `openspec archive "<change-name>" -y` (it merges the delta specs into
-      openspec/specs/ itself); commit; invoke
-      superpowers:finishing-a-development-branch.
+      failing tests. The user decides how to continue. Unfixed findings go
+      into a merge only when the user accepts each one: append
+      `Final: User accepted: <finding>` to the ledger for each, then, if
+      the state is `all_done` and the suite passes, continue with the
+      close-out in the next bullet.
+    - If nothing stopped you, or the user accepted every unfixed finding,
+      close out in this order:
+      1. Make specs/ and design.md describe the code as built: archive
+         merges these specs into openspec/specs/.
+         - For each ruling or user acceptance that changes behavior a spec
+           describes, update that spec.
+         - For each final-review finding about behavior the code delivers
+           that specs/ leaves out, add that behavior to its spec as a
+           requirement or scenario.
+         - For each ruling or user acceptance that departs from a design.md
+           decision, change that decision and mark it
+           `(changed during the build: <ruling>)`.
+         Run `openspec validate "<change-name>"` and fix what it reports.
+         List each edit to the user.
+      2. Write openspec/changes/<change-name>/rulings.md: the ledger dies
+         with the workspace, and archive keeps this file with the change.
+         Start it with `# Rulings: <change-name>`, then these sections, one
+         bullet per item and `None.` under an empty section:
+         - `## Rulings`: every ledger line containing `Ruling:`, in the
+           order made.
+         - `## Deferred minors`: every `minor (deferred)` line without a
+           matching `minor resolved` line, and every Minor whose `Final:`
+           outcome is `open`.
+         - `## Final review`: each finding from the `Final:` ledger lines,
+           with its severity and outcome; write `accepted by the user`
+           after each finding with a `Final: User accepted:` line.
+         - `## Ledger`: the whole ledger, verbatim, in a code block.
+      3. Copy every `*-report.md` file from the skill's workspace for this
+         plan to openspec/changes/<change-name>/reports/: the implementer
+         and fixer reports hold the test evidence and reasoning that the
+         ledger only summarizes.
+      4. Finish the skill's own close-out: report its rulings, delete its
+         workspace for this plan.
+      5. Run `openspec archive "<change-name>" -y` (it merges the delta
+         specs into openspec/specs/ itself).
+      6. Stage with `git add -A openspec` (archive moves the change folder)
+         and commit.
+      7. Invoke superpowers:finishing-a-development-branch.
