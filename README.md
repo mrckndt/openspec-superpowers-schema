@@ -229,6 +229,30 @@ expanded profile: `openspec config profile`, then `openspec update`):
 Leave `superpowers:brainstorming`, `superpowers:writing-plans` and `superpowers:subagent-driven-development` to the
 schema: invoked directly, they bypass the change folder, its validation, and the apply rules.
 
+## Choosing models (example)
+
+The schema does not pick models; that stays your decision. superpowers advises using the least powerful model that
+can do each role, and a strong plan makes cheaper models viable for the build. One possible split with Anthropic
+models:
+
+| Role | Model |
+|---|---|
+| Explore, brainstorming, `design.md`, `tasks.md` | Opus |
+| Orchestrator (`/opsx:apply`) | Sonnet |
+| Implementer, complete code in the plan | Haiku |
+| Implementer, multi-file integration or prose spec | Sonnet |
+| Task reviewer | Sonnet (Haiku only for tiny diffs) |
+| Final review, fix-loop escalation (rounds 4-5) | Opus |
+
+- **Plan:** the stronger the plan, the cheaper the build. Exact file paths, complete code and test commands let
+  Haiku transcribe instead of decide. Check plan code against the real files, or Haiku burns turns on it.
+- **Haiku:** only where the task text holds the complete code. Cheap models often need 2-3x the turns on
+  multi-step work and then cost more overall.
+- **Orchestrator:** it follows process rules (ledger, worktree, reviews) rather than designing, so Sonnet is enough;
+  it needs to follow a long rule set reliably, which Haiku may not.
+- **Dispatch:** name the model on every subagent dispatch; an omitted one inherits the session's.
+- **Measure:** treat the split as a hypothesis and compare cost per change on your first changes.
+
 ## Known limitations
 
 - The superpowers skills still bring their own defaults (`docs/superpowers/` paths, a choice of execution method,
