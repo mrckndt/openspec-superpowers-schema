@@ -1,13 +1,29 @@
-# OS
+# macOS
 .DS_Store
-Thumbs.db
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
 
-# Editors
-.idea/
-.vscode/
+# Vim
 *.swp
-*~
+*.swo
+*.swn
+.*.swp
+.*.swo
+.*.swn
+*.un~
+.netrwhist
+.viminfo
+.vim/
+Session.vim
+.session.vim
 
-# Local agent state
-.claude/
-.superpowers/
+# Neovim
+.nvim/
+.nvimlog
+nvim.log
